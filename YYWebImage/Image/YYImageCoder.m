@@ -2868,3 +2868,173 @@ CGImageRef YYCGImageCreateWithWebPData(CFDataRef webpData,
 }
 
 @end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// MARK: - Azar Extensions
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//static void* PIXEL_BUFFER = NULL;
+//static int PIXEL_BUFFER_SIZE = 0;
+
+#if YYIMAGE_WEBP_ENABLED
+
+// Hyperconnect custom
+@implementation AZARWebPFrame
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        return self;
+    }
+    else {
+        return nil;
+    }
+}
+- (id)copyWithZone:(NSZone *)zone {
+    AZARWebPFrame *frame = [self.class new];
+    frame.index = _index;
+    frame.width = _width;
+    frame.height = _height;
+    frame.duration = _duration;
+    frame.bufferSize = _bufferSize;
+    frame.buffer = _buffer;
+    return frame;
+}
+@end
+
+@implementation YYImageDecoder (AZARWebPDecodingSupport)
+- (AZARWebPFrame *)AZAR_webPMetaInfoAtIndex:(NSUInteger)index {
+    assert(_webpSource != nil);
+    if (_webpSource == nil) return nil;
+    
+    WebPIterator iter;
+    if (!WebPDemuxGetFrame(_webpSource, (int)(index + 1), &iter)) return NULL; // demux webp frame data
+    // frame numbers are one-based in webp -----------^
+    
+    AZARWebPFrame* frame = [[AZARWebPFrame alloc] init];
+    frame.width = iter.width;
+    frame.height = iter.height;
+    size_t bitsPerPixel = 32;
+    frame.stride = YYImageByteAlign(frame.width, 16) * (bitsPerPixel / 8);
+    frame.bufferSize = frame.stride * frame.height;
+    
+    return frame;
+}
+
+- (AZARWebPFrame *)AZAR_webPFrameAtIndex:(NSUInteger)index buffer:(void*)buffer {
+    assert(_webpSource != nil);
+    if (_webpSource == nil) return nil;
+    
+    WebPIterator iter;
+    if (!WebPDemuxGetFrame(_webpSource, (int)(index + 1), &iter)) return NULL; // demux webp frame data
+    // frame numbers are one-based in webp -----------^
+    
+    int frameWidth = iter.width;
+    int frameHeight = iter.height;
+    if (frameWidth < 1 || frameHeight < 1) return NULL;
+    
+    int width = frameWidth;
+    int height = frameHeight;
+    if (width > _width || height > _height) return NULL;
+    
+    const uint8_t *payload = iter.fragment.bytes;
+    size_t payloadSize = iter.fragment.size;
+    
+    WebPDecoderConfig config;
+    if (!WebPInitDecoderConfig(&config)) {
+        WebPDemuxReleaseIterator(&iter);
+        return NULL;
+    }
+    if (WebPGetFeatures(payload , payloadSize, &config.input) != VP8_STATUS_OK) {
+        WebPDemuxReleaseIterator(&iter);
+        return NULL;
+    }
+    
+    size_t bitsPerPixel = 32;
+    size_t bytesPerRow = YYImageByteAlign(width, 16) * (bitsPerPixel / 8);
+    size_t length = bytesPerRow * height;
+    
+    void *pixels = buffer;
+    
+    config.output.colorspace = MODE_bgrA;
+    config.output.is_external_memory = 1;
+    config.output.u.RGBA.rgba = pixels;
+    config.output.u.RGBA.stride = (int)bytesPerRow;
+    config.output.u.RGBA.size = length;
+    VP8StatusCode result = WebPDecode(payload, payloadSize, &config); // decode
+    if ((result != VP8_STATUS_OK) && (result != VP8_STATUS_NOT_ENOUGH_DATA)) {
+        WebPDemuxReleaseIterator(&iter);
+        return NULL;
+    }
+    WebPDemuxReleaseIterator(&iter);
+    
+    AZARWebPFrame* frame = [[AZARWebPFrame alloc] init];
+    frame.index = index;
+    frame.width = width;
+    frame.height = height;
+    frame.duration = 0;
+    frame.stride = (int)bytesPerRow;
+    frame.buffer = pixels;
+    frame.bufferSize = length;
+    
+    return frame;
+}
+@end
+
+#else
+
+// Hyperconnect custom
+@implementation AZARWebPFrame
+@end
+@implementation YYImageDecoder (AZARWebPDecodingSupport)
+- (AZARWebPFrame *)AZAR_webPMetaInfoAtIndex:(NSUInteger)index {
+    return nil
+}
+- (AZARWebPFrame *)AZAR_webPFrameAtIndex:(NSUInteger)index buffer:(void*)buffer {
+    return nil
+}
+@end
+
+#endif
