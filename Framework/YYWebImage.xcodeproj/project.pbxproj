@@ -54,7 +54,6 @@
 		D97539D01BD35C5200C6F4B8 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D97539CF1BD35C5200C6F4B8 /* CoreFoundation.framework */; };
 		D97539D21BD35C5600C6F4B8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D97539D11BD35C5600C6F4B8 /* UIKit.framework */; };
 		FB952FA51CCF2E3100475BD0 /* WebP.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB952FA41CCF2E3100475BD0 /* WebP.framework */; };
-		FB952FA71CCF2EFE00475BD0 /* HYPERCONNECT.NOTE.md in Sources */ = {isa = PBXBuildFile; fileRef = FB952FA61CCF2EFE00475BD0 /* HYPERCONNECT.NOTE.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -334,7 +333,6 @@
 			files = (
 				D97539A41BD2997800C6F4B8 /* UIButton+YYWebImage.m in Sources */,
 				D97539BE1BD2AC3E00C6F4B8 /* UIImage+YYWebImage.m in Sources */,
-				FB952FA71CCF2EFE00475BD0 /* HYPERCONNECT.NOTE.md in Sources */,
 				D97539A21BD2997800C6F4B8 /* MKAnnotationView+YYWebImage.m in Sources */,
 				D975399A1BD2997800C6F4B8 /* YYKVStorage.m in Sources */,
 				D975399C1BD2997800C6F4B8 /* YYMemoryCache.m in Sources */,
