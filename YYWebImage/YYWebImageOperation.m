@@ -161,14 +161,13 @@ static void URLInBlackListAdd(NSURL *url) {
 @end
 
 typedef NSURLSessionAuthChallengeDisposition (^YYURLSessionDidReceiveAuthenticationChallengeBlock)(NSURLSession *session, NSURLAuthenticationChallenge *challenge, NSURLCredential * __autoreleasing *credential);
-@interface YYWebImageOperation() <NSURLConnectionDelegate,NSURLSessionDownloadDelegate>
+@interface YYWebImageOperation() <NSURLSessionDownloadDelegate>
 @property (readwrite, getter=isExecuting) BOOL executing;
 @property (readwrite, getter=isFinished) BOOL finished;
 @property (readwrite, getter=isCancelled) BOOL cancelled;
 @property (readwrite, getter=isStarted) BOOL started;
 @property (nonatomic, strong) NSRecursiveLock *lock;
 
-//@property (nonatomic, strong) NSURLConnection *connection;
 
 
 //替换属性
@@ -210,7 +209,7 @@ typedef NSURLSessionAuthChallengeDisposition (^YYURLSessionDidReceiveAuthenticat
     }
 }
 
-/// Global image request network thread, used by NSURLConnection delegate.
+/// Global image request network thread
 + (NSThread *)_networkThread {
     static NSThread *thread = nil;
     static dispatch_once_t onceToken;
