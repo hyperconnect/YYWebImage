@@ -89,7 +89,10 @@ static UIApplication *_YYSharedApplication() {
     request.HTTPShouldUsePipelining = YES;
     request.cachePolicy = (options & YYWebImageOptionUseNSURLCache) ?
         NSURLRequestUseProtocolCachePolicy : NSURLRequestReloadIgnoringLocalCacheData;
-    
+
+    /// Hotfix by dgoon
+    [request setValue:@"Mozilla/5.0 (iPhone) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13G36 Safari/601.1" forHTTPHeaderField:@"User-Agent"];
+
     YYWebImageOperation *operation = [[YYWebImageOperation alloc] initWithRequest:request
                                                                           options:options
                                                                             cache:_cache

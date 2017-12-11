@@ -503,3 +503,74 @@ CG_EXTERN CFDataRef _Nullable YYCGImageCreateEncodedWebPData(CGImageRef imageRef
                                                              YYImagePreset preset);
 
 NS_ASSUME_NONNULL_END
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// MARK: - Azar Extensions
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+NS_ASSUME_NONNULL_BEGIN
+//#import <WebP/
+//#if YYIMAGE_WEBP_ENABLED
+
+@interface AZARWebPFrame : NSObject<NSCopying>
+@property (nonatomic) NSUInteger index;                 ///< Frame index (zero based)
+@property (nonatomic) NSUInteger width;                 ///< Frame width
+@property (nonatomic) NSUInteger height;                ///< Frame height
+@property (nonatomic) NSTimeInterval duration;          ///< Frame duration in seconds
+@property (nonatomic) NSUInteger stride;                ///< Bytes for one row
+@property (nonatomic) NSUInteger bufferSize;            ///< pixel buffer size
+@property (nullable, nonatomic) void* buffer;           ///< Buffer
+@end
+
+@interface YYImageDecoder (AZARWebPDecodingSupport)
+- (nullable AZARWebPFrame *)AZAR_webPMetaInfoAtIndex:(NSUInteger)index;
+- (nullable AZARWebPFrame *)AZAR_webPFrameAtIndex:(NSUInteger)index buffer:(void*)buffer;
+@end
+
+//#endif
+
+NS_ASSUME_NONNULL_END
+
+
