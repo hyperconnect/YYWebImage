@@ -424,10 +424,10 @@ typedef NSURLSessionAuthChallengeDisposition (^YYURLSessionDidReceiveAuthenticat
             if (![_request.URL isFileURL] && (_options & YYWebImageOptionShowNetworkActivity)) {
                 [YYWebImageManager decrementNetworkActivityCount];
             }
+
+            [_task cancel];
+            _task = nil;
         }
-        [_task cancel];
-        _task = nil;
-        
         
         if (_completion) _completion(nil, _request.URL, YYWebImageFromNone, YYWebImageStageCancelled, nil);
         [self _endBackgroundTask];
